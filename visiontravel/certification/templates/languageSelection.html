@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>言語選択</title>
+</head>
+<body>
+    <h1>言語を選択してください</h1>
+    <form action="/result.html/" method="post">
+        {% csrf_token %}
+        <select name="language">
+            <option value="ja">日本語</option>
+            <option value="en">English</option>
+        </select>
+        <button type="submit">選択</button>
+    </form>
+</body>
+</html>
+
+
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>Sample_GoogleMap</title>
+
+<script src="https://maps.google.com/maps/api/js?key=AIzaSyC3npO6lpbj9zyeKdcNa7uRX5a0Dpikwbc&language=ja"></script>
+
+<style>
+  html, body { height: 100%; margin: 0; padding: 0; }
+  #map { height: 100%; width: 100%; }
+  
+  #search-bar {
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 300px;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+  }
+  
+  #search-input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding-right: 30px; /* アイコン分のスペースを追加 */
+  }
+  
+  #search-icon {
+    position: absolute;
+    right: 10px; /* 右端に配置 */
+    cursor: pointer;
+    font-size: 18px;
+    color: #666;
+  }
+  
+  #settings-icon {
+    position: absolute;
+    top: 50px; /* 画面拡大マークの下に配置 */
+    right: 0px;
+    cursor: pointer;
+    font-size: 36px; /* アイコンを大きくする */
+    color: #333;
+    border-radius: 50%;
+    padding: 10px;
+    z-index: 2; /* 拡大マークよりも下に配置 */
+  }
+  
+  #settings-menu {
+    position: absolute;
+    top: 105px;
+    right: 10px;
+    background-color: white;
+    border: 1px solid #ccc;
+    padding: 10px;
+    width: 200px;
+    display: none;
+    z-index: 20;
+  }
+  
+  #settings-menu a {
+    display: block;
+    padding: 8px;
+    text-decoration: none;
+    color: black;
+  }
+  
+  #settings-menu a:hover {
+    background-color: #f0f0f0;
+  }
+  
+  #upload-form {
+    display: none;
+    margin-top: 20px;
+  }
+  </style>
+  </head>
+  
+  <body>
+  <div id="map"></div>
+  
+  <!-- 検索バー -->
+  <div id="search-bar">
+    <input id="search-input" type="text" placeholder="検索" />
+    <span id="search-icon">🔍</span> <!-- 虫眼鏡アイコン -->
+  </div>
+  
+  <!-- 設定アイコン（歯車マーク） -->
+  <div id="settings-icon">⚙️</div>
+  
+  <!-- 設定メニュー -->
+  <div id="settings-menu">
+    <a href="/certification/upload" id="open-upload">画像アップロード</a>  <!-- 絶対パスで指定 -->
+    <a href="#" id="view-history">履歴表示</a>
+    <a href="/certification/settings" target="_blank">ユーザー情報変更・削除</a>
+    <a href="/user/login" id="logout">ログアウト</a>
+    <hr> <!-- 区切り線 -->
+    <a href="/certification/languageSelection">言語選択</a>
+  </div>
+  
+  <!-- 画像アップロードフォーム -->
+  <div id="upload-form">
+    <h3>画像アップロード</h3>
+    <input type="file" id="file-input" accept="image/*" />
+    <button onclick="uploadImage()">アップロード</button>
+    <p id="upload-result"></p>
+  </div>
+  
+  <script>
+    // 地図の初期化
+    var MyLatLng = new google.maps.LatLng(35.6638, 138.5684);
+    var Options = {
+      zoom: 15,
+      center: MyLatLng,
+      mapTypeId: 'roadmap'
+    };
+    var map = new google.maps.Map(document.getElementById('map'), Options);
+  
+    // 検索機能の追加
+    function searchLocation() {
+      var address = document.getElementById('search-input').value;
+      if (address) {
+        var geocoder = new google.maps.Geocoder();
+  
+        geocoder.geocode({ 'address': address }, function(results, status) {
+          if (status === 'OK') {
+            map.setCenter(results[0].geometry.location);
+            new google.maps.Marker({
+              map: map,
+              position: results[0].geometry.location
+            });
+          } else {
+            alert('場所を見つけられませんでした: ' + status);
+          }
+        });
+      } else {
+        alert('住所を入力してください。');
+      }
+    }
+  
+    // 🔍 アイコンのクリックイベント
+    document.getElementById('search-icon').addEventListener('click', function() {
+      searchLocation();
+    });
+  
+    // Enter キーを押したときのイベント
+    document.getElementById('search-input').addEventListener('keypress', function(event) {
+      if (event.key === 'Enter') {
+        searchLocation();
+      }
+    });
+  
+    // 設定アイコンのクリックイベント
+    document.getElementById('settings-icon').addEventListener('click', function() {
+      var menu = document.getElementById('settings-menu');
+      menu.style.display = (menu.style.display === 'block') ? 'none' : 'block';
+    });
+  
+    // 履歴表示ボタンのクリックイベント
+    document.getElementById('view-history').addEventListener('click', function(event) {
+      event.preventDefault();
+      alert('履歴の表示機能はまだ実装されていません');
+    });
+
+    // ログアウトボタンのクリックイベント
+  document.getElementById('logout').addEventListener('click', function(event) {
+    event.preventDefault();
+    // ここにログアウト処理を追加
+    alert('ログアウトしました');
+    // 例えば、ログアウト用のURLにリダイレクトする
+     window.location.href = '/user/login';  // サーバー側でログアウト処理を実行
+  });
+  
+    // アップロードされた画像を処理する関数
+    function uploadImage() {
+      var fileInput = document.getElementById('file-input');
+      var resultText = document.getElementById('upload-result');
+  
+      if (fileInput.files && fileInput.files[0]) {
+        var file = fileInput.files[0];
+        var reader = new FileReader();
+  
+        reader.onload = function(e) {
+          resultText.innerHTML = 'アップロードした画像: <br><img src="' + e.target.result + '" width="200" />';
+        };
+        reader.readAsDataURL(file);
+      } else {
+        resultText.innerHTML = '画像が選択されていません。';
+      }
+    }
+  </script>
+  
+  </body>
+  </html>

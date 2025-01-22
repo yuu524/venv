@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>履歴閲覧</title>
+</head>
+<body>
+    <h1>アップロードされた画像一覧</h1>
+    <div>
+        {% if images %}
+            {% for image in images %}
+                <img src="{{ image.url }}" alt="{{ image.name }}" style="max-width: 200px;">
+                <p>{{ image.name }}</p>
+            {% endfor %}
+        {% else %}
+            <p>アップロードされた画像はありません。</p>
+        {% endif %}
+    </div>
+</body>
+</html>
