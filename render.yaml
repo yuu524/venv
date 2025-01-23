@@ -2,7 +2,7 @@ databases:
   - name: django_render_db
     region: singapore
     plan: free
-    databaseName: sqlite3
+    databaseName: sqlite3_4cnz
     user: django_user
 
 services:
@@ -18,7 +18,7 @@ services:
     envVars:
       - key: DATABASE_URL
         fromDatabase:
-          name: sqlite3
+          name: sqlite3_4cnz
           property: connectionString
       - key: SECRET_KEY
         generateValue: true
