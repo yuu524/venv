@@ -2,7 +2,7 @@ databases:
   - name: django_render_db
     region: singapore
     plan: free
-    databaseName: db.sqlite3
+    databaseName: sqlite3
     user: django_user
 
 services:
@@ -16,9 +16,9 @@ services:
     branch: main
     healthCheckPath: /
     envVars:
-      - key: DATABASE_URL
+      - key: 'postgresql://django_user:8zAhzhsSfBrOKlAx1Fi4xJEuIeWRtGOm@dpg-cu8r94aj1k6c73f133fg-a/sqlite3_4cnz'
         fromDatabase:
-          name: db.sqlite3
+          name: sqlite3
           property: connectionString
       - key: SECRET_KEY
         generateValue: true
